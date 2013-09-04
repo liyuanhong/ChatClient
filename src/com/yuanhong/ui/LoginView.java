@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.JButton;
+
+import com.liyuanhong.listener.LoginViewConfigerClick;
 
 public class LoginView {
 
@@ -42,7 +45,7 @@ public class LoginView {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 418, 187);
+		frame.setBounds(100, 100, 418, 229);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -81,5 +84,12 @@ public class LoginView {
 		textField_2.setColumns(10);
 		textField_2.setBounds(130, 101, 232, 21);
 		frame.getContentPane().add(textField_2);
+		
+		JButton loginButton = new JButton("\u8FDB\u5165\u804A\u5929");
+		loginButton.setFont(new Font("ËÎÌו", Font.PLAIN, 14));
+		loginButton.setBounds(269, 152, 93, 29);
+		frame.getContentPane().add(loginButton);
+		
+		loginButton.addMouseListener(new LoginViewConfigerClick(frame));
 	}
 }

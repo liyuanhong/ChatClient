@@ -20,24 +20,29 @@ public class ChatClient {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChatClient window = new ChatClient();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ChatClient window = new ChatClient();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.
 	 */
 	public ChatClient() {
 		initialize();
+	}
+	
+	public void showWin(){
+		ChatClient window = new ChatClient();
+		window.frame.setVisible(true);
 	}
 
 	/**
