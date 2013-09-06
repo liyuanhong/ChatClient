@@ -2,17 +2,17 @@ package com.liyuanhong.util;
 
 public class Destination {
 	private String address;
-	private String port;
+	private int port;
 	public String getAddress() {
 		return address;
 	}
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getPort() {
+	public int getPort() {
 		return port;
 	}
-	public void setPort(String port) {
+	public void setPort(int port) {
 		this.port = port;
 	}	
 }

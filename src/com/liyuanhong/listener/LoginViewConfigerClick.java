@@ -4,14 +4,21 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 import com.yuanhong.ui.ChatClient;
 
 public class LoginViewConfigerClick extends MouseAdapter{
-	JFrame window;
+	private JFrame window;
+	private JTextField loginName;
+	private JTextField serverAddress;
+	private JTextField theServerPort;
 	
-	public LoginViewConfigerClick(JFrame window) {
+	public LoginViewConfigerClick(JFrame window,JTextField loginName,JTextField serverAddress,JTextField theServerPort) {
 		this.window = window;
+		this.loginName = loginName;
+		this.serverAddress = serverAddress;
+		this.theServerPort = theServerPort;
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {

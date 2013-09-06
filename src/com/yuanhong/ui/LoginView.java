@@ -13,9 +13,9 @@ import com.liyuanhong.listener.LoginViewConfigerClick;
 public class LoginView {
 
 	private JFrame frame;
-	private JTextField txtLoginname;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField loginName;
+	private JTextField serverAddress;
+	private JTextField theServerPort;
 
 	/**
 	 * Launch the application.
@@ -64,32 +64,32 @@ public class LoginView {
 		serverPort.setBounds(10, 105, 65, 15);
 		frame.getContentPane().add(serverPort);
 		
-		txtLoginname = new JTextField();
-		txtLoginname.setText("login_name");
-		txtLoginname.setFont(new Font("宋体", Font.PLAIN, 14));
-		txtLoginname.setBounds(130, 20, 232, 21);
-		frame.getContentPane().add(txtLoginname);
-		txtLoginname.setColumns(10);
+		loginName = new JTextField();
+		loginName.setText("login_name");
+		loginName.setFont(new Font("宋体", Font.PLAIN, 14));
+		loginName.setBounds(130, 20, 232, 21);
+		frame.getContentPane().add(loginName);
+		loginName.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setText("192.168.1.101");
-		textField_1.setFont(new Font("宋体", Font.PLAIN, 14));
-		textField_1.setColumns(10);
-		textField_1.setBounds(130, 56, 232, 21);
-		frame.getContentPane().add(textField_1);
+		serverAddress = new JTextField();
+		serverAddress.setText("192.168.1.101");
+		serverAddress.setFont(new Font("宋体", Font.PLAIN, 14));
+		serverAddress.setColumns(10);
+		serverAddress.setBounds(130, 56, 232, 21);
+		frame.getContentPane().add(serverAddress);
 		
-		textField_2 = new JTextField();
-		textField_2.setText("5000");
-		textField_2.setFont(new Font("宋体", Font.PLAIN, 14));
-		textField_2.setColumns(10);
-		textField_2.setBounds(130, 101, 232, 21);
-		frame.getContentPane().add(textField_2);
+		theServerPort = new JTextField();
+		theServerPort.setText("5000");
+		theServerPort.setFont(new Font("宋体", Font.PLAIN, 14));
+		theServerPort.setColumns(10);
+		theServerPort.setBounds(130, 101, 232, 21);
+		frame.getContentPane().add(theServerPort);
 		
 		JButton loginButton = new JButton("\u8FDB\u5165\u804A\u5929");
 		loginButton.setFont(new Font("宋体", Font.PLAIN, 14));
 		loginButton.setBounds(269, 152, 93, 29);
 		frame.getContentPane().add(loginButton);
 		
-		loginButton.addMouseListener(new LoginViewConfigerClick(frame));
+		loginButton.addMouseListener(new LoginViewConfigerClick(frame, loginName, serverAddress, theServerPort));
 	}
 }

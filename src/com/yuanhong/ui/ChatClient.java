@@ -101,12 +101,12 @@ public class ChatClient {
 		scrollPane_2.setBounds(10, 390, 488, 81);
 		frame.getContentPane().add(scrollPane_2);
 		
-		JTextArea textArea_1 = new JTextArea();
-		scrollPane_2.setViewportView(textArea_1);
+		JTextArea messageArea = new JTextArea();
+		scrollPane_2.setViewportView(messageArea);
 		
-		JButton btnNewButton = new JButton("\u53D1\u9001");
-		btnNewButton.setFont(new Font("ËÎÌו", Font.BOLD, 14));
-		btnNewButton.setBounds(534, 391, 83, 28);
-		frame.getContentPane().add(btnNewButton);
+		JButton sendMessage = new JButton("\u53D1\u9001");
+		sendMessage.setFont(new Font("ËÎÌו", Font.BOLD, 14));
+		sendMessage.setBounds(534, 391, 83, 28);
+		frame.getContentPane().add(sendMessage);
 	}
 }
