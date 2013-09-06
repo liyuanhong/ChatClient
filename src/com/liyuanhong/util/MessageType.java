@@ -1,0 +1,7 @@
+package com.liyuanhong.util;
+
+public class MessageType {
+	public static int DEFAULT = 0;    //默认的发送消息的形式
+	public static int ALL = 1;        //向所有用户发送消息
+	public static int LOGOUT = 2;     //某用户退出时，向在线用户发送用户列表更新消息
+}
