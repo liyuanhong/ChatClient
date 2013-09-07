@@ -13,9 +13,14 @@ import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 
+import com.liyuanhong.listener.SendMessageButtonListener;
+
 public class ChatClient {
 
 	private JFrame frame;
+	private String loginName;
+	private String address;
+	private int port;
 
 	/**
 	 * Launch the application.
@@ -40,8 +45,16 @@ public class ChatClient {
 		initialize();
 	}
 	
+	public ChatClient(String loginName,String address,int port) {
+		this.loginName = loginName;
+		this.address = address;
+		this.port = port;
+		
+		initialize();		
+	}
+	
 	public void showWin(){
-		ChatClient window = new ChatClient();
+		ChatClient window = new ChatClient(loginName,address,port);
 		window.frame.setVisible(true);
 	}
 
@@ -108,5 +121,7 @@ public class ChatClient {
 		sendMessage.setFont(new Font("ËÎÌו", Font.BOLD, 14));
 		sendMessage.setBounds(534, 391, 83, 28);
 		frame.getContentPane().add(sendMessage);
+		
+		sendMessage.addMouseListener(new SendMessageButtonListener(sendMessage, messageArea, loginName, address, port));
 	}
 }

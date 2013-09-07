@@ -23,7 +23,7 @@ public class LoginViewConfigerClick extends MouseAdapter{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
-		ChatClient client = new ChatClient();
+		ChatClient client = new ChatClient(loginName.getText(),serverAddress.getText(),Integer.parseInt(theServerPort.getText()));
 		client.showWin();
 		window.dispose();
 	}
