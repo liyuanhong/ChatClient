@@ -7,6 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.json.JSONObject;
+
 import com.liyuanhong.util.Destination;
 import com.liyuanhong.util.MessageClass;
 import com.liyuanhong.util.MessageType;
@@ -40,7 +42,8 @@ public class SendMessageButtonListener extends MouseAdapter{
 		message.setMessage(messageArea.getText());
 		message.setMessType(MessageType.DEFAULT);
 		
-		System.out.println(destination.getAddress());
-		System.out.println(destination.getPort());
+		JSONObject json = new JSONObject(message.getJsonMap());
+		
+		System.out.println(json.toString());
 	}
 }
