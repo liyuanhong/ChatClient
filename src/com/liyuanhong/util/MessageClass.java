@@ -7,6 +7,8 @@ public class MessageClass {
 	private int messType;
 	private Destination destination;
 	private String message;
+	private String userName;
+	private String sendedUser;
 	public int getMessType() {
 		return messType;
 	}
@@ -25,7 +27,19 @@ public class MessageClass {
 	public void setMessage(String message) {
 		this.message = message;
 	}	
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	
+	public String getSendedUser() {
+		return sendedUser;
+	}
+	public void setSendedUser(String sendedUser) {
+		this.sendedUser = sendedUser;
+	}
 	//将json对象转换为字符串
 	public String getJsonString(){
 		return getJsonMap().toString();
@@ -37,11 +51,13 @@ public class MessageClass {
 		Map<String, Object> subMap = new HashMap<String, Object>();
 		
 		subMap.put("address", destination.getAddress());
-		subMap.put("port", destination.getPort());
+		subMap.put("port", destination.getPort());		
 		
 		map.put("messType", this.getMessType());
 		map.put("destination", subMap);
 		map.put("message", this.getMessage());
+		map.put("userName", this.getUserName());
+		map.put("sendedUser", this.getSendedUser());
 		
 		return map;
 	}

@@ -12,12 +12,14 @@ import org.json.JSONObject;
 import com.liyuanhong.util.Destination;
 import com.liyuanhong.util.MessageClass;
 import com.liyuanhong.util.MessageType;
+import com.yuanhong.sendMessage.SendMessageThread;
 
 public class SendMessageButtonListener extends MouseAdapter{
 	private JButton sendMessage;
 	private JTextArea messageArea;
 	private String loginName;
 	private String address;
+	private String sendedUser;
 	private int port;
 	private MessageClass message;        //要发送的消息
 	private Destination destination;
@@ -33,17 +35,24 @@ public class SendMessageButtonListener extends MouseAdapter{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
-		destination = new Destination();
-		destination.setAddress(address);
-		destination.setPort(port);
-		
-		message = new MessageClass();		
-		message.setDestination(destination);
-		message.setMessage(messageArea.getText());
-		message.setMessType(MessageType.DEFAULT);
-		
-		JSONObject json = new JSONObject(message.getJsonMap());
-		
-		System.out.println(json.toString());
+		if(messageArea.getText().equals("")){
+		}else{
+			destination = new Destination();
+			destination.setAddress(address);
+			destination.setPort(port);
+			
+			message = new MessageClass();		
+			message.setDestination(destination);
+			message.setUserName(loginName);
+			message.setSendedUser(sendedUser);
+			message.setMessage(messageArea.getText());
+			message.setMessType(MessageType.DEFAULT);
+			
+			JSONObject json = new JSONObject(message.getJsonMap());
+			messageArea.setText("");
+			
+			SendMessageThread thread = new SendMessageThread(json.toString(), address, port);
+			thread.start();
+		}		
 	}
 }

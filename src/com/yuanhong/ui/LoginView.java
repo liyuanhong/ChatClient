@@ -79,7 +79,7 @@ public class LoginView {
 		frame.getContentPane().add(serverAddress);
 		
 		theServerPort = new JTextField();
-		theServerPort.setText("5000");
+		theServerPort.setText("3000");
 		theServerPort.setFont(new Font("ËÎÌו", Font.PLAIN, 14));
 		theServerPort.setColumns(10);
 		theServerPort.setBounds(130, 101, 232, 21);

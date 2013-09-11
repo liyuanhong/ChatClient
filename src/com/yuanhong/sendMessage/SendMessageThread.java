@@ -11,7 +11,7 @@ public class SendMessageThread extends Thread{
 	private String address;
 	private int port;
 	
-	SendMessageThread(String message,String address,int port) {
+	public SendMessageThread(String message,String address,int port) {
 		this.message=message;
 		this.address=address;
 		this.port=port;
@@ -19,17 +19,15 @@ public class SendMessageThread extends Thread{
 		try {
 			socket=new Socket(address, port);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
 	public void run() {
-		try {			
+		try {		
 			OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
 			output.write(message);
 			output.close();
