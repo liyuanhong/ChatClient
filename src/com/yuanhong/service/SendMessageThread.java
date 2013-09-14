@@ -1,4 +1,4 @@
-package com.yuanhong.sendMessage;
+package com.yuanhong.service;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import com.liyuanhong.util.Destination;
 import com.liyuanhong.util.MessageClass;
 import com.liyuanhong.util.MessageType;
-import com.yuanhong.sendMessage.SendMessageThread;
+import com.yuanhong.service.SendMessageThread;
 
 public class SendMessageButtonListener extends MouseAdapter{
 	private JButton sendMessage;
