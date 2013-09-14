@@ -1,4 +1,4 @@
-package com.liyuanhong.util;
+package com.yuanhong.util;
 
 public class LoginMessageClass {
 	private String address;

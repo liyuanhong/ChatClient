@@ -1,4 +1,4 @@
-package com.liyuanhong.util;
+package com.yuanhong.util;
 
 import java.util.HashMap;
 import java.util.Map;

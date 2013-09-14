@@ -1,4 +1,4 @@
-package com.liyuanhong.util;
+package com.yuanhong.util;
 
 public class MessageType {
 	public static int DEFAULT = 0;    //默认的发送消息的形式

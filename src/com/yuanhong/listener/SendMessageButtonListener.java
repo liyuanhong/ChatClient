@@ -1,4 +1,4 @@
-package com.liyuanhong.listener;
+package com.yuanhong.listener;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -9,10 +9,10 @@ import javax.swing.JTextField;
 
 import org.json.JSONObject;
 
-import com.liyuanhong.util.Destination;
-import com.liyuanhong.util.MessageClass;
-import com.liyuanhong.util.MessageType;
 import com.yuanhong.service.SendMessageThread;
+import com.yuanhong.util.Destination;
+import com.yuanhong.util.MessageClass;
+import com.yuanhong.util.MessageType;
 
 public class SendMessageButtonListener extends MouseAdapter{
 	private JButton sendMessage;

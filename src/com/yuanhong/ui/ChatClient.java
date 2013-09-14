@@ -13,7 +13,7 @@ import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 
-import com.liyuanhong.listener.SendMessageButtonListener;
+import com.yuanhong.listener.SendMessageButtonListener;
 
 public class ChatClient {
 

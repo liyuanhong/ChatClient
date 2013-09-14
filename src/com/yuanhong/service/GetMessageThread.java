@@ -7,7 +7,7 @@ import java.net.Socket;
 
 import javax.swing.JTextField;
 
-import com.liyuanhong.util.AnalyseMessage;
+import com.yuanhong.util.AnalyseMessage;
 
 public class GetMessageThread extends Thread{
 	private String infomation = "";
