@@ -48,6 +48,8 @@ public class SendMessageButtonListener extends MouseAdapter{
 			message.setMessage(messageArea.getText());
 			message.setMessType(MessageType.DEFAULT);
 			
+			message.setSendedUser("bbb");
+			
 			JSONObject json = new JSONObject(message.getJsonMap());
 			messageArea.setText("");
 			

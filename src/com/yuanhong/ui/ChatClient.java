@@ -9,11 +9,16 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
+import java.io.IOException;
+import java.net.ServerSocket;
+
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 
 import com.yuanhong.listener.SendMessageButtonListener;
+import com.yuanhong.service.GetMessageThread;
+import com.yuanhong.service.SendMessageThread;
 
 public class ChatClient {
 
@@ -21,7 +26,10 @@ public class ChatClient {
 	private String loginName;
 	private String address;
 	private int port;
+	private int getMessagePort;
+	
 
+	
 	/**
 	 * Launch the application.
 	 */
@@ -38,6 +46,10 @@ public class ChatClient {
 //		});
 //	}
 
+	public JFrame getFrame() {
+		return frame;
+	}
+
 	/**
 	 * Create the application.
 	 */
@@ -45,18 +57,19 @@ public class ChatClient {
 		initialize();
 	}
 	
-	public ChatClient(String loginName,String address,int port) {
+	public ChatClient(String loginName,String address,int port,int getMessagePort) {
 		this.loginName = loginName;
 		this.address = address;
 		this.port = port;
+		this.getMessagePort = getMessagePort;
 		
 		initialize();		
 	}
 	
-	public void showWin(){
-		ChatClient window = new ChatClient(loginName,address,port);
-		window.frame.setVisible(true);
-	}
+//	public void showWin(){
+//		ChatClient window = new ChatClient(loginName,address,port,getMessagePort);
+//		window.frame.setVisible(true);
+//	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -71,11 +84,11 @@ public class ChatClient {
 		scrollPane.setBounds(10, 40, 488, 309);
 		frame.getContentPane().add(scrollPane);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
-		textArea.setForeground(Color.BLACK);
-		scrollPane.setViewportView(textArea);
-		textArea.setLineWrap(true);
+		JTextArea messageShow = new JTextArea();
+		messageShow.setEditable(false);
+		messageShow.setForeground(Color.BLACK);
+		scrollPane.setViewportView(messageShow);
+		messageShow.setLineWrap(true);
 		
 		JLabel lblNewLabel = new JLabel("\u5BF9\u8BDD\uFF1A");
 		lblNewLabel.setForeground(Color.BLACK);
@@ -115,6 +128,7 @@ public class ChatClient {
 		frame.getContentPane().add(scrollPane_2);
 		
 		JTextArea messageArea = new JTextArea();
+		messageArea.setLineWrap(true);
 		scrollPane_2.setViewportView(messageArea);
 		
 		JButton sendMessage = new JButton("\u53D1\u9001");
@@ -123,5 +137,15 @@ public class ChatClient {
 		frame.getContentPane().add(sendMessage);
 		
 		sendMessage.addMouseListener(new SendMessageButtonListener(sendMessage, messageArea, loginName, address, port));
+	
+		ServerSocket serSocket = null;
+		try {
+			System.out.println("-------------" + getMessagePort);
+			serSocket = new ServerSocket(getMessagePort);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		GetMessageThread getMessageThread = new GetMessageThread(serSocket,messageShow);
+		getMessageThread.start();
 	}
 }

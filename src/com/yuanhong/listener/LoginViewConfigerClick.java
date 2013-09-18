@@ -61,8 +61,9 @@ public class LoginViewConfigerClick extends MouseAdapter{
 		if(temp == 1){
 			JOptionPane.showMessageDialog(window, "该用户名已经使用，请换其他用户名！", "警告", JOptionPane.ERROR_MESSAGE);
 		}else if(temp == 0){
-			ChatClient client = new ChatClient(loginName.getText(),serverAddress.getText(),Integer.parseInt(theServerPort.getText()));
-			client.showWin();
+			ChatClient client = new ChatClient(loginName.getText(),serverAddress.getText(),
+					Integer.parseInt(theServerPort.getText()),clientPort);
+			client.getFrame().setVisible(true);
 			window.dispose();
 		}		
 	}
