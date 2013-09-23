@@ -4,6 +4,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -13,6 +15,7 @@ import com.yuanhong.service.SendMessageThread;
 import com.yuanhong.util.Destination;
 import com.yuanhong.util.MessageClass;
 import com.yuanhong.util.MessageType;
+import com.yuanhong.util.UserInfo;
 
 public class SendMessageButtonListener extends MouseAdapter{
 	private JButton sendMessage;
@@ -23,38 +26,48 @@ public class SendMessageButtonListener extends MouseAdapter{
 	private int port;
 	private MessageClass message;        //要发送的消息
 	private Destination destination;
+	private UserInfo currentUser;          //表示当前聊天用户
+	private JFrame window;
 	
-	public SendMessageButtonListener(JButton sendMessage,JTextArea messageArea,String loginName,String address,int port) {
+	public SendMessageButtonListener(JButton sendMessage,JTextArea messageArea,String loginName,
+			String address,int port,UserInfo currentUser,JFrame window) {
 		this.sendMessage = sendMessage;
 		this.messageArea = messageArea;
 		this.loginName = loginName;
 		this.address = address;
 		this.port = port;
+		this.currentUser = currentUser;
+		this.window = window;
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
-		if(messageArea.getText().equals("")){
+		if(currentUser.getAddress() == null){
+			JOptionPane.showMessageDialog(window, "请指定要发送消息的对象", "警告", JOptionPane.ERROR_MESSAGE);
 		}else{
-			destination = new Destination();
-			destination.setAddress(address);
-			destination.setPort(port);
-			
-			message = new MessageClass();		
-			message.setDestination(destination);
-			message.setUserName(loginName);
-			message.setSendedUser(sendedUser);
-			message.setMessage(messageArea.getText());
-			message.setMessType(MessageType.DEFAULT);
-			
-			message.setSendedUser("bbb");
-			
-			JSONObject json = new JSONObject(message.getJsonMap());
-			messageArea.setText("");
-			
-			SendMessageThread thread = new SendMessageThread(json.toString(), address, port);
-			thread.start();
+			if(messageArea.getText().equals("")){
+			}else{
+				destination = new Destination();
+				destination.setAddress(address);
+				destination.setPort(port);
+				
+				message = new MessageClass();		
+				message.setDestination(destination);
+				message.setUserName(loginName);
+				message.setSendedUser(sendedUser);
+				message.setMessage(messageArea.getText());
+				message.setMessType(MessageType.DEFAULT);
+				message.setSendedUser(currentUser.getName());
+				
+				message.setSendedUser(currentUser.getName());
+				
+				JSONObject json = new JSONObject(message.getJsonMap());
+				messageArea.setText("");
+				
+				SendMessageThread thread = new SendMessageThread(json.toString(), address, port);
+				thread.start();
+			}		
 		}		
 	}
 }

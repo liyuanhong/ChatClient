@@ -4,11 +4,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 
+import javax.swing.JList;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.json.JSONObject;
+
 import com.yuanhong.util.AnalyseMessage;
+import com.yuanhong.util.MessageType;
+import com.yuanhong.util.UserInfo;
 
 public class GetMessageThread extends Thread{
 	private ServerSocket serSocket;
@@ -16,6 +24,8 @@ public class GetMessageThread extends Thread{
 	private InputStreamReader reader;
 	private String sendedUser;
 	private JTextArea messageShow;
+	private Map<String, UserInfo> allUserMap;
+	private JList userListArea;
 
 	private int messType;
 	private String message;
@@ -23,9 +33,12 @@ public class GetMessageThread extends Thread{
 	private int port;
 	private String addrress;
 
-	public GetMessageThread( ServerSocket serSocket,JTextArea messageShow) {
+	public GetMessageThread( ServerSocket serSocket,JTextArea messageShow,
+			Map<String, UserInfo> allUserMap,JList userListArea) {
 		this.serSocket = serSocket;
 		this.messageShow = messageShow;
+		this.allUserMap = allUserMap;
+		this.userListArea = userListArea;
 	}
 
 	@Override
@@ -53,7 +66,8 @@ public class GetMessageThread extends Thread{
 				sendedUser = analyze.getSendedUser();
 				
 				
-				dealWithMessage(messType);
+				
+				dealWithMessage(messType,infomation);
 				
 				reader = null;
 			} catch (IOException e) {
@@ -64,7 +78,7 @@ public class GetMessageThread extends Thread{
 	
 	
 	//对不同的消息类型进行处理
-		public void dealWithMessage(int messType){
+		public void dealWithMessage(int messType,String infomation){
 			switch(messType){
 			case 0 : 
 				String gotMessage;
@@ -76,7 +90,37 @@ public class GetMessageThread extends Thread{
 			case 2 :
 				
 			case 3 :
+				UpdateUserList(infomation);
+			}
+		}
+		
+		//更新客户端用户列表
+		public void UpdateUserList(String infomation){
+			parseUserList(infomation, allUserMap);
+			
+			Vector userInfoList = new Vector<String>();
+			for(Iterator ite = allUserMap.keySet().iterator();ite.hasNext();){
+				userInfoList.add(ite.next().toString());
+			}
+			userListArea.setListData(userInfoList);
+		}
+		
+		public void parseUserList(String userListString,Map<String, UserInfo> allUserMap){
+			try {
+				JSONObject jsonSend = new JSONObject(userListString);
+				String message = jsonSend.getString("message");
+				JSONObject json = new JSONObject(message);
+				for(Iterator ite = json.keys();ite.hasNext();){
+					String name = ite.next().toString();
+					JSONObject subJson = new JSONObject(json.get(name).toString());
+					UserInfo userinfo = new UserInfo();
+					userinfo.setAddress(subJson.getString("address"));
+					userinfo.setPort(Integer.parseInt(subJson.getString("port")));
+					allUserMap.put(name, userinfo);
+				}
 				
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 }

@@ -1,24 +1,26 @@
 package com.yuanhong.ui;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-import javax.swing.JLabel;
-import java.awt.Font;
 import java.awt.Color;
+import java.awt.Font;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 
-import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
+import com.yuanhong.listener.ClientCloseingListener;
 import com.yuanhong.listener.SendMessageButtonListener;
+import com.yuanhong.listener.UserInfoListAreaListener;
 import com.yuanhong.service.GetMessageThread;
-import com.yuanhong.service.SendMessageThread;
+import com.yuanhong.util.UserInfo;
 
 public class ChatClient {
 
@@ -27,12 +29,10 @@ public class ChatClient {
 	private String address;
 	private int port;
 	private int getMessagePort;
+	private Map<String, UserInfo> allUserMap;
+	private UserInfo currentUser;          //表示当前聊天用户
 	
-
 	
-	/**
-	 * Launch the application.
-	 */
 //	public static void main(String[] args) {
 //		EventQueue.invokeLater(new Runnable() {
 //			public void run() {
@@ -45,6 +45,10 @@ public class ChatClient {
 //			}
 //		});
 //	}
+	
+	/**
+	 * Launch the application.
+	 */
 
 	public JFrame getFrame() {
 		return frame;
@@ -57,25 +61,23 @@ public class ChatClient {
 		initialize();
 	}
 	
-	public ChatClient(String loginName,String address,int port,int getMessagePort) {
+	public ChatClient(String loginName,String address,int port,int getMessagePort,Map<String, UserInfo> allUserMap) {
 		this.loginName = loginName;
 		this.address = address;
 		this.port = port;
 		this.getMessagePort = getMessagePort;
-		
+		this.allUserMap = allUserMap;
 		initialize();		
 	}
 	
-//	public void showWin(){
-//		ChatClient window = new ChatClient(loginName,address,port,getMessagePort);
-//		window.frame.setVisible(true);
-//	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
+		currentUser = new UserInfo();
+		
+		frame = new JFrame(loginName);
 		frame.setBounds(100, 100, 772, 530);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -90,11 +92,11 @@ public class ChatClient {
 		scrollPane.setViewportView(messageShow);
 		messageShow.setLineWrap(true);
 		
-		JLabel lblNewLabel = new JLabel("\u5BF9\u8BDD\uFF1A");
-		lblNewLabel.setForeground(Color.BLACK);
-		lblNewLabel.setFont(new Font("宋体", Font.BOLD, 14));
-		lblNewLabel.setBounds(10, 20, 54, 15);
-		frame.getContentPane().add(lblNewLabel);
+		JLabel currentDialog = new JLabel("\u5BF9\u8BDD\uFF1A");
+		currentDialog.setForeground(Color.BLACK);
+		currentDialog.setFont(new Font("宋体", Font.BOLD, 14));
+		currentDialog.setBounds(10, 20, 488, 15);
+		frame.getContentPane().add(currentDialog);
 		
 		JLabel lblNewLabel_1 = new JLabel("\u5728\u7EBF\u7528\u6237\uFF1A\uFF080\uFF09");
 		lblNewLabel_1.setFont(new Font("宋体", Font.BOLD, 14));
@@ -105,8 +107,8 @@ public class ChatClient {
 		scrollPane_1.setBounds(534, 40, 182, 308);
 		frame.getContentPane().add(scrollPane_1);
 		
-		JList list = new JList();
-		list.setModel(new AbstractListModel() {
+		JList userListArea = new JList();
+		userListArea.setModel(new AbstractListModel() {
 			String[] values = new String[] {};
 			public int getSize() {
 				return values.length;
@@ -115,8 +117,9 @@ public class ChatClient {
 				return values[index];
 			}
 		});
-		list.setToolTipText("");
-		scrollPane_1.setViewportView(list);
+		userListArea.setToolTipText("");
+		initializeUserList(allUserMap, userListArea);
+		scrollPane_1.setViewportView(userListArea);
 		
 		JLabel lblNewLabel_2 = new JLabel("\u8F93\u5165\u6D88\u606F\uFF1A");
 		lblNewLabel_2.setFont(new Font("宋体", Font.BOLD, 14));
@@ -133,19 +136,45 @@ public class ChatClient {
 		
 		JButton sendMessage = new JButton("\u53D1\u9001");
 		sendMessage.setFont(new Font("宋体", Font.BOLD, 14));
-		sendMessage.setBounds(534, 391, 83, 28);
+		sendMessage.setBounds(534, 391, 75, 28);
 		frame.getContentPane().add(sendMessage);
 		
-		sendMessage.addMouseListener(new SendMessageButtonListener(sendMessage, messageArea, loginName, address, port));
-	
+		JButton sendGroup = new JButton("\u7FA4\u53D1");
+		sendGroup.setEnabled(false);
+		sendGroup.setFont(new Font("宋体", Font.BOLD, 14));
+		sendGroup.setBounds(534, 443, 75, 28);
+		frame.getContentPane().add(sendGroup);
+		
+		JButton groupOrSigalSend = new JButton("\u7FA4\u53D1\u6A21\u5F0F");
+		groupOrSigalSend.setFont(new Font("宋体", Font.BOLD, 14));
+		groupOrSigalSend.setBounds(619, 391, 93, 28);
+		frame.getContentPane().add(groupOrSigalSend);
+		
+		JButton sound = new JButton("\u6709\u58F0");
+		sound.setFont(new Font("宋体", Font.BOLD, 14));
+		sound.setBounds(619, 443, 88, 28);
+		frame.getContentPane().add(sound);
+		
+		sendMessage.addMouseListener(new SendMessageButtonListener(sendMessage, messageArea, loginName, address, port,currentUser,frame));
+		frame.addWindowListener(new ClientCloseingListener(address, port, loginName));
+		userListArea.addMouseListener(new UserInfoListAreaListener(allUserMap, userListArea, currentUser, currentDialog));
+		
 		ServerSocket serSocket = null;
 		try {
-			System.out.println("-------------" + getMessagePort);
 			serSocket = new ServerSocket(getMessagePort);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		GetMessageThread getMessageThread = new GetMessageThread(serSocket,messageShow);
+		
+		GetMessageThread getMessageThread = new GetMessageThread(serSocket,messageShow,allUserMap,userListArea);
 		getMessageThread.start();
+	}
+	
+	public void initializeUserList(Map<String, UserInfo> allUserMap,JList userListArea){
+		Vector userInfoList = new Vector<String>();
+		for(Iterator ite = allUserMap.keySet().iterator();ite.hasNext();){
+			userInfoList.add(ite.next().toString());
+		}
+		userListArea.setListData(userInfoList);
 	}
 }

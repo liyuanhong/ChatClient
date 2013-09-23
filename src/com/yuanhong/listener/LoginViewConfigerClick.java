@@ -6,20 +6,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Locale;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
-import javax.net.ssl.SSLEngineResult.Status;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.yuanhong.service.SendMessageThread;
 import com.yuanhong.ui.ChatClient;
-import com.yuanhong.util.AnalyseMessage;
 import com.yuanhong.util.MessageClass;
 import com.yuanhong.util.MessageType;
+import com.yuanhong.util.UserInfo;
 
 public class LoginViewConfigerClick extends MouseAdapter{
 	private JFrame window;
@@ -30,6 +32,7 @@ public class LoginViewConfigerClick extends MouseAdapter{
 	private int messType = MessageType.LOGIN;
 	private int clientPort;                          //本地接收消息的端口
 	private JTextField clientPortField;
+	Map<String, UserInfo> allUserMap;
 	
 	public LoginViewConfigerClick(JFrame window,JTextField loginName,JTextField serverAddress,JTextField theServerPort,int clientPort,JTextField clientPortField) {
 		this.window = window;
@@ -38,6 +41,7 @@ public class LoginViewConfigerClick extends MouseAdapter{
 		this.theServerPort = theServerPort;
 		this.clientPort = clientPort;
 		this.clientPortField = clientPortField;	
+		allUserMap = new TreeMap<String, UserInfo>();
 		
 	}
 	@Override
@@ -57,12 +61,13 @@ public class LoginViewConfigerClick extends MouseAdapter{
 		JSONObject json = new JSONObject(message.getJsonMap());	
 		SendMessageThread thread = new SendMessageThread(json.toString(), serverAddress.getText(), Integer.parseInt(theServerPort.getText()));
 		thread.start();
-		int temp = getUserStatus();
-		if(temp == 1){
+		String temp = getUserStatus();
+		if(temp.equals("1")){
 			JOptionPane.showMessageDialog(window, "该用户名已经使用，请换其他用户名！", "警告", JOptionPane.ERROR_MESSAGE);
-		}else if(temp == 0){
+		}else{
+			parseUserList(temp, allUserMap);
 			ChatClient client = new ChatClient(loginName.getText(),serverAddress.getText(),
-					Integer.parseInt(theServerPort.getText()),clientPort);
+					Integer.parseInt(theServerPort.getText()),clientPort,allUserMap);
 			client.getFrame().setVisible(true);
 			window.dispose();
 		}		
@@ -108,7 +113,7 @@ public class LoginViewConfigerClick extends MouseAdapter{
 	}
 	
 	//判断此用户是否在服务器端登录，登录返回1，没有登录返回0
-	public int getUserStatus(){
+	public String getUserStatus(){
 		String status = "";
 			try {
 				ServerSocket ser = new ServerSocket(clientPort);
@@ -118,13 +123,31 @@ public class LoginViewConfigerClick extends MouseAdapter{
 				InputStreamReader reader = new InputStreamReader(soc.getInputStream());
 				while ((len = reader.read(ch)) != -1) {
 					status = status + String.valueOf(ch, 0, len);
-				}
-				System.out.println(status);		
+				}	
 				reader = null;
 				ser.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return Integer.parseInt(status);
+			return status;
+	}
+	
+	public void parseUserList(String userListString,Map<String, UserInfo> allUserMap){
+		try {
+			JSONObject jsonSend = new JSONObject(userListString);
+			String message = jsonSend.getString("message");
+			JSONObject json = new JSONObject(message);
+			System.out.println(json.toString());
+			for(Iterator ite = json.keys();ite.hasNext();){
+				String name = ite.next().toString();
+				JSONObject subJson = new JSONObject(json.get(name).toString());
+				UserInfo userinfo = new UserInfo();
+				userinfo.setAddress(subJson.getString("address"));
+				userinfo.setPort(Integer.parseInt(subJson.getString("port")));
+				allUserMap.put(name, userinfo);
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
