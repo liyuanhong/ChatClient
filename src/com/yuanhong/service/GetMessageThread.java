@@ -88,7 +88,7 @@ public class GetMessageThread extends Thread{
 			case 1 :
 				
 			case 2 :
-				
+				UpdateLogoutUserList(infomation);
 			case 3 :
 				UpdateUserList(infomation);
 			}
@@ -117,6 +117,31 @@ public class GetMessageThread extends Thread{
 					userinfo.setAddress(subJson.getString("address"));
 					userinfo.setPort(Integer.parseInt(subJson.getString("port")));
 					allUserMap.put(name, userinfo);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		public void UpdateLogoutUserList(String infomation){
+			parseLogoutUserList(infomation, allUserMap);
+			
+			Vector userInfoList = new Vector<String>();
+			for(Iterator ite = allUserMap.keySet().iterator();ite.hasNext();){
+				userInfoList.add(ite.next().toString());
+			}
+			userListArea.setListData(userInfoList);
+		}
+		
+		public void parseLogoutUserList(String userListString,Map<String, UserInfo> allUserMap){
+			try {
+				JSONObject jsonSend = new JSONObject(userListString);
+				String message = jsonSend.getString("message");
+				for(Iterator ite = allUserMap.keySet().iterator();ite.hasNext();){
+					if(ite.next().toString().equals(message)){
+						allUserMap.remove(message);
+					}	
 				}
 				
 			} catch (Exception e) {

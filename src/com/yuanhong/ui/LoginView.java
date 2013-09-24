@@ -114,7 +114,7 @@ public class LoginView {
 		
 		JButton setDefaultPort = new JButton("\u5B9A\u4E49\u672C\u5730\u7AEF\u53E3");
 		setDefaultPort.setFont(new Font("ËÎÌו", Font.PLAIN, 14));
-		setDefaultPort.setBounds(10, 199, 117, 29);
+		setDefaultPort.setBounds(10, 199, 132, 29);
 		frame.getContentPane().add(setDefaultPort);
 		
 		JLabel lblNewLabel_1 = new JLabel("\u672C\u5730\u7AEF\u53E3\u9ED8\u8BA4\u4E3A3001\uFF0C\u5982\u679C\u88AB\u5360\u7528\uFF0C\u5219\u81EA\u52A8\u52A01");

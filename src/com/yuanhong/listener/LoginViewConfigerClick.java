@@ -52,25 +52,42 @@ public class LoginViewConfigerClick extends MouseAdapter{
 		message.setUserName(loginName.getText());
 		message.setMessType(MessageType.LOGIN);
 		if(clientPortField.isEditable()){
-			message.setClientPort(getUserDefinedPort());	
+			int userDefinedPort = getUserDefinedPort();
+			if(userDefinedPort != 0){
+				message.setClientPort(userDefinedPort);
+				
+				JSONObject json = new JSONObject(message.getJsonMap());	
+				SendMessageThread thread = new SendMessageThread(json.toString(), serverAddress.getText(), Integer.parseInt(theServerPort.getText()));
+				thread.start();
+				String temp = getUserStatus();
+				if(temp.equals("1")){
+					JOptionPane.showMessageDialog(window, "该用户名已经使用，请换其他用户名！", "警告", JOptionPane.ERROR_MESSAGE);
+				}else{
+					parseUserList(temp, allUserMap);
+					ChatClient client = new ChatClient(loginName.getText(),serverAddress.getText(),
+							Integer.parseInt(theServerPort.getText()),clientPort,allUserMap);
+					client.getFrame().setVisible(true);
+					window.dispose();
+				}	
+			}		
 		}else{
 			message.setClientPort(getDefaultPort());
 			clientPort = getDefaultPort();
-		}
-		
-		JSONObject json = new JSONObject(message.getJsonMap());	
-		SendMessageThread thread = new SendMessageThread(json.toString(), serverAddress.getText(), Integer.parseInt(theServerPort.getText()));
-		thread.start();
-		String temp = getUserStatus();
-		if(temp.equals("1")){
-			JOptionPane.showMessageDialog(window, "该用户名已经使用，请换其他用户名！", "警告", JOptionPane.ERROR_MESSAGE);
-		}else{
-			parseUserList(temp, allUserMap);
-			ChatClient client = new ChatClient(loginName.getText(),serverAddress.getText(),
-					Integer.parseInt(theServerPort.getText()),clientPort,allUserMap);
-			client.getFrame().setVisible(true);
-			window.dispose();
-		}		
+			
+			JSONObject json = new JSONObject(message.getJsonMap());	
+			SendMessageThread thread = new SendMessageThread(json.toString(), serverAddress.getText(), Integer.parseInt(theServerPort.getText()));
+			thread.start();
+			String temp = getUserStatus();
+			if(temp.equals("1")){
+				JOptionPane.showMessageDialog(window, "该用户名已经使用，请换其他用户名！", "警告", JOptionPane.ERROR_MESSAGE);
+			}else{
+				parseUserList(temp, allUserMap);
+				ChatClient client = new ChatClient(loginName.getText(),serverAddress.getText(),
+						Integer.parseInt(theServerPort.getText()),clientPort,allUserMap);
+				client.getFrame().setVisible(true);
+				window.dispose();
+			}	
+		}	
 	}
 	
 	//判断将要作为获取消息的端口号是否被占用

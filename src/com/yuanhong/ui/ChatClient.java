@@ -1,6 +1,7 @@
 package com.yuanhong.ui;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -18,8 +19,10 @@ import javax.swing.JTextArea;
 
 import com.yuanhong.listener.ClientCloseingListener;
 import com.yuanhong.listener.SendMessageButtonListener;
+import com.yuanhong.listener.SendMessageTypeListener;
 import com.yuanhong.listener.UserInfoListAreaListener;
 import com.yuanhong.service.GetMessageThread;
+import com.yuanhong.util.SendMessageStyle;
 import com.yuanhong.util.UserInfo;
 
 public class ChatClient {
@@ -31,20 +34,21 @@ public class ChatClient {
 	private int getMessagePort;
 	private Map<String, UserInfo> allUserMap;
 	private UserInfo currentUser;          //表示当前聊天用户
+	private SendMessageStyle messageStyle;  //消息是群发还是单发
 	
 	
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ChatClient window = new ChatClient();
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ChatClient window = new ChatClient();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	
 	/**
 	 * Launch the application.
@@ -76,6 +80,7 @@ public class ChatClient {
 	 */
 	private void initialize() {
 		currentUser = new UserInfo();
+		messageStyle = new SendMessageStyle();
 		
 		frame = new JFrame(loginName);
 		frame.setBounds(100, 100, 772, 530);
@@ -139,7 +144,7 @@ public class ChatClient {
 		sendMessage.setBounds(534, 391, 75, 28);
 		frame.getContentPane().add(sendMessage);
 		
-		JButton sendGroup = new JButton("\u7FA4\u53D1");
+		JButton sendGroup = new JButton("");
 		sendGroup.setEnabled(false);
 		sendGroup.setFont(new Font("宋体", Font.BOLD, 14));
 		sendGroup.setBounds(534, 443, 75, 28);
@@ -147,17 +152,19 @@ public class ChatClient {
 		
 		JButton groupOrSigalSend = new JButton("\u7FA4\u53D1\u6A21\u5F0F");
 		groupOrSigalSend.setFont(new Font("宋体", Font.BOLD, 14));
-		groupOrSigalSend.setBounds(619, 391, 93, 28);
+		groupOrSigalSend.setBounds(619, 391, 97, 28);
 		frame.getContentPane().add(groupOrSigalSend);
 		
-		JButton sound = new JButton("\u6709\u58F0");
+		JButton sound = new JButton("");
+		sound.setEnabled(false);
 		sound.setFont(new Font("宋体", Font.BOLD, 14));
-		sound.setBounds(619, 443, 88, 28);
+		sound.setBounds(619, 443, 97, 28);
 		frame.getContentPane().add(sound);
 		
-		sendMessage.addMouseListener(new SendMessageButtonListener(sendMessage, messageArea, loginName, address, port,currentUser,frame));
+		sendMessage.addMouseListener(new SendMessageButtonListener(sendMessage, messageArea, loginName, address, port,currentUser,frame,messageStyle));
 		frame.addWindowListener(new ClientCloseingListener(address, port, loginName));
 		userListArea.addMouseListener(new UserInfoListAreaListener(allUserMap, userListArea, currentUser, currentDialog));
+		groupOrSigalSend.addMouseListener(new SendMessageTypeListener(sendMessage, sendGroup, groupOrSigalSend, messageStyle));
 		
 		ServerSocket serSocket = null;
 		try {
