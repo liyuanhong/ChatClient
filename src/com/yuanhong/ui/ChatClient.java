@@ -38,18 +38,18 @@ public class ChatClient {
 	private SendMessageStyle messageStyle;         //消息是群发还是单发
 	
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChatClient window = new ChatClient();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ChatClient window = new ChatClient();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 	
 	/**
 	 * Launch the application.
@@ -84,6 +84,7 @@ public class ChatClient {
 		messageStyle = new SendMessageStyle();
 		
 		frame = new JFrame(loginName);
+		frame.setResizable(false);
 		frame.setBounds(100, 100, 772, 530);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
