@@ -31,6 +31,7 @@ public class SendMessageThread extends Thread{
 			OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
 			output.write(message);
 			output.close();
+			socket.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

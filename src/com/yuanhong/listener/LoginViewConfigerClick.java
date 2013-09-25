@@ -14,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.yuanhong.service.SendMessageThread;
@@ -32,7 +31,9 @@ public class LoginViewConfigerClick extends MouseAdapter{
 	private int messType = MessageType.LOGIN;
 	private int clientPort;                          //本地接收消息的端口
 	private JTextField clientPortField;
-	Map<String, UserInfo> allUserMap;
+	private Map<String, UserInfo> allUserMap;
+	private int serverStatus = 0;
+	
 	
 	public LoginViewConfigerClick(JFrame window,JTextField loginName,JTextField serverAddress,JTextField theServerPort,int clientPort,JTextField clientPortField) {
 		this.window = window;
@@ -58,7 +59,7 @@ public class LoginViewConfigerClick extends MouseAdapter{
 				
 				JSONObject json = new JSONObject(message.getJsonMap());	
 				SendMessageThread thread = new SendMessageThread(json.toString(), serverAddress.getText(), Integer.parseInt(theServerPort.getText()));
-				thread.start();
+				thread.start();				
 				String temp = getUserStatus();
 				if(temp.equals("1")){
 					JOptionPane.showMessageDialog(window, "该用户名已经使用，请换其他用户名！", "警告", JOptionPane.ERROR_MESSAGE);
@@ -75,7 +76,7 @@ public class LoginViewConfigerClick extends MouseAdapter{
 			clientPort = getDefaultPort();
 			
 			JSONObject json = new JSONObject(message.getJsonMap());	
-			SendMessageThread thread = new SendMessageThread(json.toString(), serverAddress.getText(), Integer.parseInt(theServerPort.getText()));
+			SendMessageThread thread = new SendMessageThread(json.toString(), serverAddress.getText(), Integer.parseInt(theServerPort.getText()));			
 			thread.start();
 			String temp = getUserStatus();
 			if(temp.equals("1")){
@@ -117,7 +118,7 @@ public class LoginViewConfigerClick extends MouseAdapter{
 	public int getUserDefinedPort(){
 		try{
 			clientPort = Integer.parseInt(clientPortField.getText());
-			if(1024 > clientPort && clientPort > 49151){
+			if(1024 > clientPort || clientPort > 49151){
 				JOptionPane.showMessageDialog(window, "请输入1024~49151", "警告", JOptionPane.ERROR_MESSAGE);
 				return 0;    //返回0，表示获取端口号错误，重新输入
 			}else{
@@ -143,6 +144,8 @@ public class LoginViewConfigerClick extends MouseAdapter{
 				}	
 				reader = null;
 				ser.close();
+				serverStatus = 0;
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -168,3 +171,5 @@ public class LoginViewConfigerClick extends MouseAdapter{
 		}
 	}
 }
+
+

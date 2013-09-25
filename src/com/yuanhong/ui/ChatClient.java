@@ -19,6 +19,7 @@ import javax.swing.JTextArea;
 
 import com.yuanhong.listener.ClientCloseingListener;
 import com.yuanhong.listener.SendMessageButtonListener;
+import com.yuanhong.listener.SendMessageKeyboardListener;
 import com.yuanhong.listener.SendMessageTypeListener;
 import com.yuanhong.listener.UserInfoListAreaListener;
 import com.yuanhong.service.GetMessageThread;
@@ -33,8 +34,8 @@ public class ChatClient {
 	private int port;
 	private int getMessagePort;
 	private Map<String, UserInfo> allUserMap;
-	private UserInfo currentUser;          //表示当前聊天用户
-	private SendMessageStyle messageStyle;  //消息是群发还是单发
+	private UserInfo currentUser;                  //表示当前聊天用户
+	private SendMessageStyle messageStyle;         //消息是群发还是单发
 	
 	
 	public static void main(String[] args) {
@@ -165,6 +166,7 @@ public class ChatClient {
 		frame.addWindowListener(new ClientCloseingListener(address, port, loginName));
 		userListArea.addMouseListener(new UserInfoListAreaListener(allUserMap, userListArea, currentUser, currentDialog));
 		groupOrSigalSend.addMouseListener(new SendMessageTypeListener(sendMessage, sendGroup, groupOrSigalSend, messageStyle));
+		messageArea.addKeyListener(new SendMessageKeyboardListener(sendMessage, messageArea, loginName, address, getMessagePort, currentUser, frame, messageStyle));
 		
 		ServerSocket serSocket = null;
 		try {
@@ -173,7 +175,7 @@ public class ChatClient {
 			e.printStackTrace();
 		}
 		
-		GetMessageThread getMessageThread = new GetMessageThread(serSocket,messageShow,allUserMap,userListArea);
+		GetMessageThread getMessageThread = new GetMessageThread(serSocket,messageShow,allUserMap,userListArea,frame,scrollPane);
 		getMessageThread.start();
 	}
 	

@@ -8,7 +8,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -26,6 +29,8 @@ public class GetMessageThread extends Thread{
 	private JTextArea messageShow;
 	private Map<String, UserInfo> allUserMap;
 	private JList userListArea;
+	private JFrame window;
+	private JScrollPane scrollPane;
 
 	private int messType;
 	private String message;
@@ -34,11 +39,14 @@ public class GetMessageThread extends Thread{
 	private String addrress;
 
 	public GetMessageThread( ServerSocket serSocket,JTextArea messageShow,
-			Map<String, UserInfo> allUserMap,JList userListArea) {
+			Map<String, UserInfo> allUserMap,JList userListArea,JFrame window,
+			JScrollPane scrollPane) {
 		this.serSocket = serSocket;
 		this.messageShow = messageShow;
 		this.allUserMap = allUserMap;
 		this.userListArea = userListArea;
+		this.window = window;
+		this.scrollPane = scrollPane;
 	}
 
 	@Override
@@ -85,13 +93,19 @@ public class GetMessageThread extends Thread{
 				gotMessage = sendedUser + ":\n";
 				gotMessage = gotMessage + "       " + message + "\n";
 				messageShow.append(gotMessage);
+				break;
 			case 1 :
-				
+				break;
 			case 2 :
 				UpdateLogoutUserList(infomation);
+				break;
 			case 3 :
 				UpdateUserList(infomation);
-			}
+				break;
+			case 4 :
+				dealWithServerClosed();
+				break;
+			}		
 		}
 		
 		//更新客户端用户列表
@@ -147,5 +161,9 @@ public class GetMessageThread extends Thread{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		
+		public void dealWithServerClosed(){
+			JOptionPane.showMessageDialog(window, "服务器已经停止工作！", "信息", JOptionPane.INFORMATION_MESSAGE);
 		}
 }
