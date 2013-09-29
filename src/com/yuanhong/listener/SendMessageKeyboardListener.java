@@ -62,12 +62,11 @@ public class SendMessageKeyboardListener extends KeyAdapter{
 						message = new MessageClass();		
 						message.setDestination(destination);
 						message.setUserName(loginName);
-						message.setSendedUser(sendedUser);
+//						message.setSendedUser(sendedUser);
 						message.setMessage(messageSend);
 						message.setMessType(MessageType.DEFAULT);
 						message.setSendedUser(currentUser.getName());
 						
-						message.setSendedUser(currentUser.getName());
 						
 						JSONObject json = new JSONObject(message.getJsonMap());
 						messageArea.setText("");		

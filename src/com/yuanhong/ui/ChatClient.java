@@ -167,7 +167,7 @@ public class ChatClient {
 		frame.addWindowListener(new ClientCloseingListener(address, port, loginName));
 		userListArea.addMouseListener(new UserInfoListAreaListener(allUserMap, userListArea, currentUser, currentDialog));
 		groupOrSigalSend.addMouseListener(new SendMessageTypeListener(sendMessage, sendGroup, groupOrSigalSend, messageStyle));
-		messageArea.addKeyListener(new SendMessageKeyboardListener(sendMessage, messageArea, loginName, address, getMessagePort, currentUser, frame, messageStyle));
+		messageArea.addKeyListener(new SendMessageKeyboardListener(sendMessage, messageArea, loginName, address, port, currentUser, frame, messageStyle));
 		
 		ServerSocket serSocket = null;
 		try {

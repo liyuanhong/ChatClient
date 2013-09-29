@@ -62,7 +62,6 @@ public class GetMessageThread extends Thread{
 				while ((len = reader.read(ch)) != -1) {
 					infomation = infomation + String.valueOf(ch, 0, len);
 				}
-				System.out.println(infomation);
 				AnalyseMessage analyze = new AnalyseMessage(infomation);
 				
 				port = analyze.getPort();
@@ -90,7 +89,7 @@ public class GetMessageThread extends Thread{
 			switch(messType){
 			case 0 : 
 				String gotMessage;
-				gotMessage = sendedUser + ":\n";
+				gotMessage = userName + ":\n";
 				gotMessage = gotMessage + "       " + message + "\n";
 				messageShow.append(gotMessage);
 				break;

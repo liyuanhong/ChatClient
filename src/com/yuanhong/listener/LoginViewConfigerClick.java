@@ -157,7 +157,6 @@ public class LoginViewConfigerClick extends MouseAdapter{
 			JSONObject jsonSend = new JSONObject(userListString);
 			String message = jsonSend.getString("message");
 			JSONObject json = new JSONObject(message);
-			System.out.println(json.toString());
 			for(Iterator ite = json.keys();ite.hasNext();){
 				String name = ite.next().toString();
 				JSONObject subJson = new JSONObject(json.get(name).toString());
