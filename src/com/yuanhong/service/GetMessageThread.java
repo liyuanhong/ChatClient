@@ -92,6 +92,7 @@ public class GetMessageThread extends Thread{
 				gotMessage = userName + ":\n";
 				gotMessage = gotMessage + "       " + message + "\n";
 				messageShow.append(gotMessage);
+				messageShow.setCaretPosition(messageShow.getText().length());
 				break;
 			case 1 :
 				break;
